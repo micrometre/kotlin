@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.composetutorial"
+    namespace = "com.example.cameraxapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.composetutorial"
-        minSdk = 24
+        applicationId = "com.example.cameraxapp"
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,13 +50,6 @@ android {
 }
 
 dependencies {
-    implementation("androidx.camera:camera-core:1.3.1")
-    implementation("androidx.camera:camera-camera2:1.3.1")
-    implementation("androidx.camera:camera-lifecycle:1.3.1")
-    implementation("androidx.camera:camera-video:1.3.1")
-    implementation("androidx.camera:camera-view:1.3.1")
-    implementation("androidx.camera:camera-extensions:1.3.1")
-
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
