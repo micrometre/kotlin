@@ -1,81 +1,82 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.cameraxapp
 
+
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.camera.core.CameraSelector
+import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
-import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.cameraxapp.ui.theme.CameraXAppTheme
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        if (!hasRequiredPermissions()) {
+            ActivityCompat.requestPermissions(
+                this, CAMERAX_PERMISSIONS, 0
+            )
+        }
         setContent {
             CameraXAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    CameraScreen()
+                val scaffoldState = rememberBottomSheetScaffoldState()
+                val controller = remember {
+                    LifecycleCameraController(applicationContext).apply {
+                        setEnabledUseCases(
+                            CameraController.IMAGE_CAPTURE or
+                                    CameraController.VIDEO_CAPTURE
+                        )
+                    }
+                }
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    sheetPeekHeight = 0.dp,
+                    sheetContent = {
+                    }
+                ) { padding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        CameraPreview(
+                            controller = controller,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        )
+                    }
                 }
             }
         }
     }
-}
 
-@Composable
-fun CameraScreen() {
 
-    val context = LocalContext.current
-    val previewView: PreviewView = remember { PreviewView(context) }
-    val cameraController = remember { LifecycleCameraController(context) }
-    val lifecycleOwner = LocalLifecycleOwner.current
-    cameraController.bindToLifecycle(lifecycleOwner)
-    cameraController.cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    previewView.controller = cameraController
-    Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
-        IconButton(modifier = Modifier
-            .padding(16.dp),
-            onClick = {
-                Toast.makeText(
-                    context,
-                    "You clicked the button.",
-                    Toast.LENGTH_LONG)
-                    .show()
-            }) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_camera_24),
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(54.dp)
-            )
+    private fun hasRequiredPermissions(): Boolean {
+        return CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
-}
-@Preview
-@Composable
-fun CSP() {
-        CameraXAppTheme {
-        CameraScreen()
+
+    companion object {
+        private val CAMERAX_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+        )
     }
 }
