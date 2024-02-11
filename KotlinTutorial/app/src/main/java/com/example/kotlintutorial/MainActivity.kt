@@ -15,6 +15,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun birthdayGreeting(name: String): String {
+    val nameGreeting = "Happy Birthday, $name!"
+    val ageGreeting = "You are now 5 years old!"
+    return "$nameGreeting\n$ageGreeting"
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TestMain() {
+    Text(text = birthdayGreeting(name = "From Arg"))
+    println(birthdayGreeting("Rover"))
+}
+
+
+/*
 @Preview(showBackground = true)
 @Composable
 fun TestingMain() {
@@ -26,7 +42,6 @@ fun TestingMain() {
 
 
 
-@Composable
 fun StringTemplates() {
     var discountPercentage: Int = 0
     var offer: String = ""
@@ -35,3 +50,4 @@ fun StringTemplates() {
     "Sale - Up to $discountPercentage% discount on $item! Hurry up!".also { offer = it }
     Text(text = offer,)
 }
+*/
