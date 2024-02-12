@@ -146,13 +146,13 @@ class MainActivity : ComponentActivity() {
 
                         Toast.makeText(
                             applicationContext,
-                            "Video capture failed!",
+                            "Video capture failed",
                             Toast.LENGTH_LONG
                         ).show()
                     }else{
                         Toast.makeText(
                             applicationContext,
-                            "Video capture succeeded!",
+                            "Video capture succeeded",
                             Toast.LENGTH_LONG
                         ).show()
                     }
