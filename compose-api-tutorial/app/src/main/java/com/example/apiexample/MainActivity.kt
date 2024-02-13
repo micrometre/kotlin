@@ -52,11 +52,9 @@ class MainActivity : ComponentActivity() {
 data class ProfileModel(
     var name: String,
 )
-
 data class UserModel(
     var profile: ProfileModel
 )
-
 @Composable
 fun MainScreen() {
    Scaffold(
@@ -79,8 +77,6 @@ fun MainScreen() {
                   value = id.value,
                   onValueChange = { id.value = it }
               )
-
-
               Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                   Button(
                       onClick = {
@@ -108,11 +104,8 @@ fun sendRequest(
         .baseUrl("http://192.168.1.122:3000")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
     val api = retrofit.create(UserApi::class.java)
-
     val call: Call<UserModel?>? = api.getUserById(id)
-
     call!!.enqueue(object: Callback<UserModel?> {
         override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
             if(response.isSuccessful) {
@@ -120,7 +113,6 @@ fun sendRequest(
                 profileState.value = response.body()!!.profile
             }
         }
-
         override fun onFailure(call: Call<UserModel?>, t: Throwable) {
             Log.e("Main", "Failed mate " + t.message.toString())
         }
