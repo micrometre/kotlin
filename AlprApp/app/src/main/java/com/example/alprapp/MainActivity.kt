@@ -124,7 +124,7 @@ fun sendRequest(
     profileState: MutableState<ProfileModel>
 ) {
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.122:3000")
+        .baseUrl("http://192.168.1.122:5000")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
