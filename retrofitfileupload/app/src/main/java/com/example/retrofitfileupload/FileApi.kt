@@ -11,9 +11,9 @@ interface FileApi {
         @Part image: MultipartBody.Part
     )
     companion object {
-        val instance by lazy {
+        val instance: FileApi by lazy {
             Retrofit.Builder()
-                .baseUrl("http://35.246.54.118:5000/upload")
+                .baseUrl("http://0.0.0.0:8080/file")
                 .build()
                 .create(FileApi::class.java)
 
