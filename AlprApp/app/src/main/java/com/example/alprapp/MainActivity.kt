@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material3.Button
@@ -29,22 +30,20 @@ import com.example.alprapp.api.UserApi
 import com.example.alprapp.ui.theme.AlprAppTheme
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AlprAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainScreen()
-                }
+                MainScreen()
             }
         }
     }
 }
+
+
 data class ProfileModel(
     var age: String,
     var name: String,
@@ -54,9 +53,8 @@ data class UserModel(
     var profile: ProfileModel
 )
 
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
     Scaffold(
@@ -124,7 +122,7 @@ fun sendRequest(
     profileState: MutableState<ProfileModel>
 ) {
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.122:5000")
+        .baseUrl("http://192.168.1.122:3000")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
