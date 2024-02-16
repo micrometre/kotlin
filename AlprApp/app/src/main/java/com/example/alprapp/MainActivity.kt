@@ -1,17 +1,16 @@
 package com.example.alprapp
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -23,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alprapp.api.UserApi
 import com.example.alprapp.ui.theme.AlprAppTheme
 import retrofit2.*
@@ -33,11 +32,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 class MainActivity : ComponentActivity() {
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AlprAppTheme {
-                MainScreen()
+                val viewModel = viewModel<FileViewModel>()
+                Box(modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                    content = {
+                        Button(onClick = {
+                        val file = File(cacheDir, "img2.jpg")
+                            file.createNewFile()
+                            file.outputStream().use {
+                                assets.open("img1.jpg").copyTo(it)
+                            }
+                            viewModel.uploadImage(file)
+
+                        }) {
+                            Text(text = "Upload")
+                        }
+                    }
+                )
             }
         }
     }
@@ -53,7 +69,6 @@ data class UserModel(
     var profile: ProfileModel
 )
 
-@Preview
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen() {
